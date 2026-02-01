@@ -16,6 +16,7 @@ const App = () => {
   const hook = () => {
     console.log("effect");
     personService.getAll().then((initialPersons) => {
+      console.log(initialPersons);
       setPersons(initialPersons);
     });
   };
@@ -44,9 +45,17 @@ const App = () => {
             );
           });
     } else {
-      personService.create(PersonObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-      });
+      personService
+        .create(PersonObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+        })
+        .catch((error) => {
+          setNotifications(error.response.data.error);
+          setTimeout(() => {
+            setNotifications(null);
+          }, 5000);
+        });
       setNotifications(`Added ${newName}`);
       setTimeout(() => {
         setNotifications(null);
